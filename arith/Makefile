@@ -15,4 +15,4 @@ direto: direto.rkt
 	raco exe $<
 
 clean:
-	rm -f *.o lex.yy.c mcalc.tab.c mcalc.tab.h direto *~
+	rm -f *.o lex.yy.c mcalc.tab.c mcalc.tab.h direto mcalc *~
