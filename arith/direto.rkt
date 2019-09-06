@@ -4,7 +4,11 @@
   [numC (n : number)]
   [plusC (l : ArithC) (r : ArithC)]
   [multC (l : ArithC) (r : ArithC)]
-  [divC (l : ArithC) (r : ArithC)])
+  [divC (l : ArithC) (r : ArithC)]
+  [ifC (condition : ArithC) (true : ArithC) (false : ArithC)]
+  [idC (s : symbol)]
+  [appC (fun : symbol) (arg : ArithC)]
+  )
 
 (define-type ArithS
   [numS    (n : number)]
@@ -12,8 +16,15 @@
   [bminusS (l : ArithS) (r : ArithS)]
   [uminusS (e : ArithS)]
   [multS   (l : ArithS) (r : ArithS)]
-  [divS   (l : ArithS) (r : ArithS)])
+  [divS   (l : ArithS) (r : ArithS)]
+  [ifS (c : ArithS) (t : ArithS) (f : ArithS)]
+  [idS (s : symbol)]
+  [appS (fun : symbol) (arg : ArithS)]
+  )
 
+(define-type FunDefC
+  [fdC (name : symbol) (arg : symbol) (body : ArithC)]
+  )
 
 (define (desugar [as : ArithS]) : ArithC
   (type-case ArithS as
@@ -23,16 +34,36 @@
     [divS   (l r) (divC (desugar l) (desugar r))]
     [bminusS (l r) (plusC (desugar l) (multC (numC -1) (desugar r)))]
     [uminusS (e)   (multC (numC -1) (desugar e))]
+    [ifS (c t f) (ifC (desugar c) (desugar t) (desugar f))]
+    [idS (s) (idC s)]
+    [appS (fun arg) (appC fun (desugar arg))]
     ))
 
+(define (subst [value : ArithC] [id : symbol] [expr : ArithC]) : ArithC
+  (type-case ArithC expr
+    [numC (n) expr]
+    [idC (s) (cond
+                [(symbol=? s id) value]
+                [else expr])]
+    [appC  (f a) (appC f (subst value id a))]
+    [plusC (l r) (plusC (subst value id l) (subst value id r))]
+    [multC (l r) (multC (subst value id l) (subst value id r))]
+    [divC (l r) (divC (subst value id l) (subst value id r))]
+    [ifC (c s n) (ifC   (subst value id c)
+                        (subst value id s) (subst value id n))]
+  ))
 
-(define (interp [a : ArithC]) : number
+(define (interp [a : ArithC] [fds : (listof FunDefC)]) : number
   (type-case ArithC a
     [numC (n) n]
-    [plusC (l r) (+ (interp l) (interp r))]
-    [multC (l r) (* (interp l) (interp r))]
-    [divC (l r) (/ (interp l) (interp r))]))
-
+    [plusC (l r) (+ (interp l fds) (interp r fds))]
+    [multC (l r) (* (interp l fds) (interp r fds))]
+    [divC (l r) (/ (interp l fds) (interp r fds))]
+    [ifC (c t f) (if (zero? (interp c fds)) (interp f fds) (interp t fds))]
+    [idC (_) (error 'interp "it shouldn't be found!")]
+    [appC (fun arg) (local ([define fd (get-fundef fun fds)])
+                      (interp (subst arg (fdC-arg fd) (fdC-body fd)) fds))]
+    ))
 
 (define (parse [s : s-expression]) : ArithS
   (cond
@@ -44,10 +75,27 @@
          [(*) (multS (parse (second sl)) (parse (third sl)))]
          [(/) (divS (parse (second sl)) (parse (third sl)))]
          [(-) (bminusS (parse (second sl)) (parse (third sl)))]
-         ; para o parser precisamos um sinal negativo...
          [(~) (uminusS (parse (second sl)))]
+         [(if) (ifS (parse (second sl)) (parse (third sl)) (parse (fourth sl)))]
+         [(call) (appS (s-exp->symbol (second sl)) (parse (third sl)))]
          [else (error 'parse "invalid list input")]))]
     [else (error 'parse "invalid input")]))
 
+(define (get-fundef [n : symbol] [fds : (listof FunDefC)]) : FunDefC
+  (cond
+    [(empty? fds) (error 'get-fundef "reference to a not defined function")]
+    [(cons? fds) (cond
+                    [(equal? n (fdC-name (first fds))) (first fds)]
+                    [else (get-fundef n (rest fds))]
+                    )]))
 
-(interp (desugar (parse (read))))
+(define library (list
+                    [fdC 'dobro 'x (plusC (idC 'x) (idC 'x))]
+                    [fdC 'quadrado 'y (multC (idC 'y) (idC 'y))]
+                    [fdC 'fatorial 'n (ifC  (idC 'n)
+                        (multC (appC 'fatorial (plusC (idC 'n) (numC -1)))
+                          (idC 'n))
+                        (numC 1))]
+                    ))
+
+(interp (desugar (parse (read))) library)
