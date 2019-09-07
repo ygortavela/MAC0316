@@ -59,7 +59,7 @@
     [plusC (l r) (+ (interp l fds) (interp r fds))]
     [multC (l r) (* (interp l fds) (interp r fds))]
     [divC (l r) (/ (interp l fds) (interp r fds))]
-    [ifC (c t f) (if (zero? (interp c fds)) (interp f fds) (interp t fds))]
+    [ifC (c t f) (cond [(zero? (interp c fds)) (interp f fds)] [else (interp t fds)])]
     [idC (_) (error 'interp "it shouldn't be found!")]
     [appC (fun arg) (local ([define fd (get-fundef fun fds)])
                       (interp (subst arg (fdC-arg fd) (fdC-body fd)) fds))]
@@ -90,10 +90,10 @@
                     )]))
 
 (define library (list
-                    [fdC 'dobro 'x (plusC (idC 'x) (idC 'x))]
-                    [fdC 'quadrado 'y (multC (idC 'y) (idC 'y))]
-                    [fdC 'fatorial 'n (ifC  (idC 'n)
-                        (multC (appC 'fatorial (plusC (idC 'n) (numC -1)))
+                    [fdC 'twice 'x (plusC (idC 'x) (idC 'x))]
+                    [fdC 'squared 'y (multC (idC 'y) (idC 'y))]
+                    [fdC 'factorial 'n (ifC  (idC 'n)
+                        (multC (appC 'factorial (plusC (idC 'n) (numC -1)))
                           (idC 'n))
                         (numC 1))]
                     ))

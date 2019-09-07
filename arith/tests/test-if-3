@@ -1,0 +1,1 @@
+if (40 + 2) then squared(3) else twice(2)
