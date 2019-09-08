@@ -69,7 +69,6 @@ exp: 			NUM 		{ $$ = dup($1); }
         | 		exp DIV exp	{ $$ = oper('/', $1, $3); }
         | 		SUB exp %prec NEG  { $$ = oper('~', $2, ""); }
         | 		OPEN exp CLOSE	{ $$ = dup($2); }
-        | 		IF exp THEN exp { $$ = newflow($2, $4, NULL); }
         | 		IF exp THEN exp ELSE exp { $$ = newflow($2, $4, $6); }
         | 		FUNC OPEN exp CLOSE	{ $$ = funcall($1, $3); }
 ;
