@@ -1,1 +1,1 @@
-if (40 + 2) then squared(3) else twice(2)
+if (40 + 2) then factorial(3) else half(10)

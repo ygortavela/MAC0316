@@ -24,8 +24,8 @@ E [Ee][+-]?{D}+
 "if"    { return IF; }
 "then"  { return THEN; }
 "else"  { return ELSE; }
-"twice"	{ yylval.val = "twice"; return FUNC; }
-"squared"	{ yylval.val = "squared"; return FUNC; }
+"half"	{ yylval.val = "half"; return FUNC; }
+"cube"	{ yylval.val = "cube"; return FUNC; }
 "factorial"	{ yylval.val = "factorial"; return FUNC; }
 
 .	{  fprintf(stderr, "Entrada ignorada\n-->%s\n", yytext); }

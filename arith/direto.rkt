@@ -90,8 +90,8 @@
                     )]))
 
 (define library (list
-                    [fdC 'twice 'x (plusC (idC 'x) (idC 'x))]
-                    [fdC 'squared 'y (multC (idC 'y) (idC 'y))]
+                    [fdC 'half 'x (divC (idC 'x) (numC 2))]
+                    [fdC 'cube 'y (multC (idC 'y) (multC (idC 'y) (idC 'y)))]
                     [fdC 'factorial 'n (ifC  (idC 'n)
                         (multC (appC 'factorial (plusC (idC 'n) (numC -1)))
                           (idC 'n))
