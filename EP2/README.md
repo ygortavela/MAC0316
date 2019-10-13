@@ -1,4 +1,4 @@
-# EP1 - MAC0316 Conceitos de Linguagens de Programação
+# EP2 - MAC0316 Conceitos de Linguagens de Programação
 ## Washington Luiz Meireles de Lima
 ### nUSP: 10737157
 ## Ygor Tavela Alves
@@ -32,7 +32,3 @@ Nos códigos estão presentes alguns comentários sobre o código em si, além d
 ***if*** `condição` ***then*** `expressão verdadeira` ***else*** `expressão falsa`
 
 3. Funções: Inicialmente as funções foram pré-definidas, estando a disposição apenas as funções twice(dobra o argumento), squared(quadrado do argumento) e factorial(fatorial do argumento), em todos os casos para executar uma função deve-se utilizar o nome da função, seguido de uma abertura de '()' com o argumento dentro do parênteses, exemplos:
-
-***factorial(`7`)***
-
-***twice(`4`)***
