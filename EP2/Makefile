@@ -1,7 +1,7 @@
 tudo: mcalc direto
 
 mcalc: mcalc.tab.o lex.yy.o main.o
-	gcc -o $@ $^  -lfl
+	gcc -o $@ $^  -lfl 
 
 mcalc.tab.o: mcalc.y
 	bison -d mcalc.y

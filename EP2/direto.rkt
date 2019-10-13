@@ -207,3 +207,5 @@
 (interpS '(def um 42 (+ 12 um)))
 
 (interpS '(def fat 1729 (seq (:= fat (func n (if n (* n (call fat (- n 1))) 1))) (call fat 10))))
+
+(interpS (read))
