@@ -35,6 +35,7 @@ alpha	[A-Za-z]+
 "let"				{return LET;}
 "fn"				{return FUNC;}
 "return"            {return RET;}
+"lambda"            {return LAMBDA;}
 {alpha}	{ yylval.val = strdup(yytext); return SYM;}
 
 .	{  fprintf(stderr, "Entrada ignorada\n-->%s\n", yytext); }

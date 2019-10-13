@@ -31,6 +31,7 @@ char *newflow(char *cond, char *t, char *f) {
 // função responsável por "traduzir" um função
 char *funcall(char *name, char *arg) {
     char *res = malloc(strlen(name) + strlen(arg) + 16);
+
     sprintf(res, "(call %s %s)", name, arg);
 
     return res;
@@ -46,7 +47,7 @@ char *def(char *name, char *arg ,char *expr) {
 char *fundef(char *arg, char *body) {
     char *res = malloc(strlen(arg) + strlen(body)+ 8);
     sprintf(res, "(func %s %s)", arg, body);
-    
+
     return res;
 }
 
@@ -61,8 +62,8 @@ void yyerror(char *);
 
 // tokens recebidos da analise léxica do Flex
 %token	<val> NUM FUNC SYM
-%token  IF THEN ELSE ADD SUB MUL DIV PRINT OPEN CLOSE LET ATTR END COLON RET
-%type	<val> exp
+%token  IF THEN ELSE ADD SUB MUL DIV PRINT OPEN CLOSE LET ATTR END COLON RET LAMBDA
+%type	<val> exp closure
 
 %left ADD SUB
 %left MUL DIV
@@ -71,12 +72,12 @@ void yyerror(char *);
 /* Gramatica */
 %%
 
-input:          
+input:
         | 		exp     { puts($1); }
         | 		error  	{ fprintf(stderr, "Entrada inválida\n"); }
 ;
 
-exp: 	        RET exp       {$$ = dup($2);}		
+exp: 	        RET exp END {$$ = dup($2);}
         |       NUM 		{ $$ = dup($1); }
         |       SYM         { $$ = dup($1); }
         | 		exp ADD exp	{ $$ = oper('+', $1, $3); }
@@ -86,10 +87,14 @@ exp: 	        RET exp       {$$ = dup($2);}
         | 		SUB exp %prec NEG  { $$ = oper('~', $2, ""); }
         | 		OPEN exp CLOSE	{ $$ = dup($2); }
         | 		IF exp THEN exp ELSE exp { $$ = newflow($2, $4, $6); }
+        |       closure
+        | 		closure OPEN exp CLOSE	{ $$ = funcall($1, $3); }
         | 		FUNC OPEN exp CLOSE	{ $$ = funcall($1, $3); }
         |       SYM ATTR exp END exp             {$$ = def($1,$3, $5);}
         |       FUNC SYM OPEN SYM CLOSE COLON exp END    {$$ = def($2, $4, $7);}
 ;
+
+closure:        OPEN LAMBDA SYM COLON exp CLOSE { $$ = fundef($3, $5); }
 
 
 %%
