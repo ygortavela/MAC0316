@@ -1,1 +1,1 @@
-half(7 * 4)
+return 10 + (lambda x : x + x)(2);

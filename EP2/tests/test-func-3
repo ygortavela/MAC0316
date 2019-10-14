@@ -1,1 +1,6 @@
-cube(3)
+fn teste(y) {
+    y = y + 1;
+    return y;
+}
+
+return teste(3);

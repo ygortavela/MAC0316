@@ -1,1 +1,4 @@
-factorial(5)
+let x = 1;
+x = x + 10;
+let y = (lambda y : y + y);
+return y;
