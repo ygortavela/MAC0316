@@ -103,7 +103,7 @@ exp: 	        END exp SCOLON {$$ = dup($2);}
         | 		OPEN exp CLOSE	{ $$ = dup($2); }
         | 		IF exp THEN exp ELSE exp { $$ = newflow($2, $4, $6); }
         | 		call OPEN exp CLOSE	{ $$ = funcall($1, $3); }
-        |       FUNC SYM OPEN SYM CLOSE OPENC exp CLOSEC exp  { $$ = def($2, fundef($4, $7), $9);}
+        |       FUNC SYM OPEN SYM CLOSE OPENC exp CLOSEC exp  { $$ =   def($2, "0", sequence(set($2, fundef($4, $7)), $9));}
 ;
 
 call:           SYM         { $$ = dup($1); }
