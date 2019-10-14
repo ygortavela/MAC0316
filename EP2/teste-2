@@ -1,2 +1,2 @@
-um = 42;
+let um = 42;
 return (12 + um);

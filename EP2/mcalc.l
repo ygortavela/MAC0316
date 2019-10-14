@@ -32,10 +32,10 @@ alpha	[A-Za-z]+
 "half"	{ yylval.val = "half"; return FUNC; }
 "cube"	{ yylval.val = "cube"; return FUNC; }
 "factorial"	{ yylval.val = "factorial"; return FUNC; }
-"let"				{return LET;}
-"fn"				{return FUNC;}
-"return"            {return RET;}
-"lambda"            {return LAMBDA;}
+"let"				{ return LET; }
+"fn"				{ return FUNC; }
+"return"            { return RET; }
+"lambda"            { return LAMBDA; }
 {alpha}	{ yylval.val = strdup(yytext); return SYM;}
 
 .	{  fprintf(stderr, "Entrada ignorada\n-->%s\n", yytext); }

@@ -51,6 +51,13 @@ char *fundef(char *arg, char *body) {
     return res;
 }
 
+char *set(char *var, char *value) {
+    char *res = malloc(strlen(var) + strlen(value)+ 8);
+    sprintf(res, "(:= %s %s)", var, value);
+
+    return res;
+}
+
 int yylex();
 
 void yyerror(char *);
@@ -63,7 +70,7 @@ void yyerror(char *);
 // tokens recebidos da analise léxica do Flex
 %token	<val> NUM FUNC SYM
 %token  IF THEN ELSE ADD SUB MUL DIV PRINT OPEN CLOSE LET ATTR END COLON RET LAMBDA
-%type	<val> exp closure
+%type	<val> exp call attr type closure
 
 %left ADD SUB
 %left MUL DIV
@@ -80,6 +87,7 @@ input:
 exp: 	        RET exp END {$$ = dup($2);}
         |       NUM 		{ $$ = dup($1); }
         |       SYM         { $$ = dup($1); }
+        |       attr
         | 		exp ADD exp	{ $$ = oper('+', $1, $3); }
         | 		exp SUB exp	{ $$ = oper('-', $1, $3); }
         | 		exp MUL exp	{ $$ = oper('*', $1, $3); }
@@ -87,14 +95,26 @@ exp: 	        RET exp END {$$ = dup($2);}
         | 		SUB exp %prec NEG  { $$ = oper('~', $2, ""); }
         | 		OPEN exp CLOSE	{ $$ = dup($2); }
         | 		IF exp THEN exp ELSE exp { $$ = newflow($2, $4, $6); }
+        | 		call OPEN exp CLOSE	{ $$ = funcall($1, $3); }
+        |       LET attr { $$ = dup($2); }
+        |       FUNC SYM OPEN SYM CLOSE COLON exp END    { $$ = def($2, $4, $7); }
+;
+
+call:           SYM         { $$ = dup($1); }
         |       closure
-        | 		closure OPEN exp CLOSE	{ $$ = funcall($1, $3); }
-        | 		FUNC OPEN exp CLOSE	{ $$ = funcall($1, $3); }
-        |       SYM ATTR exp END exp             {$$ = def($1,$3, $5);}
-        |       FUNC SYM OPEN SYM CLOSE COLON exp END    {$$ = def($2, $4, $7);}
+;
+
+attr:           SYM ATTR type END                 { $$ = set($1, $3); }
+        |       SYM ATTR type END exp             { $$ = def($1, $3, $5); }
+;
+
+type:           exp
+        |       closure
 ;
 
 closure:        OPEN LAMBDA SYM COLON exp CLOSE { $$ = fundef($3, $5); }
+;
+
 
 
 %%

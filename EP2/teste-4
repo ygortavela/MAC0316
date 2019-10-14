@@ -1,2 +1,2 @@
-x = (lambda x : x + x);
-return x;
+let x = (lambda x : x + x);
+return x(2);

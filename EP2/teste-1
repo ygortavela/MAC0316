@@ -1,5 +1,5 @@
-x = 9;
-y = 10;
-z = 13;
-w = x + y + z;
+let x = 9;
+let y = 10;
+let z = 13;
+let w = x + y + z;
 return w;
