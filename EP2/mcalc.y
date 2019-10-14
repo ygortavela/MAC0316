@@ -58,6 +58,13 @@ char *set(char *var, char *value) {
     return res;
 }
 
+char *sequence(char *expr1, char *expr2) {
+    char *res = malloc(strlen(expr1) + strlen(expr2)+ 8);
+    sprintf(res, "(seq %s %s)", expr1, expr2);
+
+    return res;
+}
+
 int yylex();
 
 void yyerror(char *);
@@ -70,7 +77,7 @@ void yyerror(char *);
 // tokens recebidos da analise léxica do Flex
 %token	<val> NUM FUNC SYM
 %token  IF THEN ELSE ADD SUB MUL DIV PRINT OPEN CLOSE LET ATTR END COLON RET LAMBDA
-%type	<val> exp call attr type closure
+%type	<val> exp call attr seq type closure
 
 %left ADD SUB
 %left MUL DIV
@@ -87,7 +94,6 @@ input:
 exp: 	        RET exp END {$$ = dup($2);}
         |       NUM 		{ $$ = dup($1); }
         |       SYM         { $$ = dup($1); }
-        |       attr
         | 		exp ADD exp	{ $$ = oper('+', $1, $3); }
         | 		exp SUB exp	{ $$ = oper('-', $1, $3); }
         | 		exp MUL exp	{ $$ = oper('*', $1, $3); }
@@ -106,6 +112,9 @@ call:           SYM         { $$ = dup($1); }
 
 attr:           SYM ATTR type END                 { $$ = set($1, $3); }
         |       SYM ATTR type END exp             { $$ = def($1, $3, $5); }
+;
+
+seq:            attr exp        { $$ = sequence($1, $2); }
 ;
 
 type:           exp
