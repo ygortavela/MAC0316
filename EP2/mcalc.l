@@ -19,12 +19,14 @@ alpha	[A-Za-z]+
 
 [(]		{ return OPEN; }
 [)]		{ return CLOSE;}
+[{]     { return OPENC; }
+[}]     { return CLOSEC; }
 [+]		{ return ADD; }
 [-]		{ return SUB; }
 [*]		{ return MUL; }
 [/]		{ return DIV; }
-[;]		{ return END; }
-[:]		{ return COLON;}
+[:]     { return COLON; }
+[;]		{ return SCOLON; }
 [=]		{ return ATTR;}
 "if"    { return IF; }
 "then"  { return THEN; }
@@ -34,9 +36,9 @@ alpha	[A-Za-z]+
 "factorial"	{ yylval.val = "factorial"; return FUNC; }
 "let"				{ return LET; }
 "fn"				{ return FUNC; }
-"return"            { return RET; }
+"return"            { return END; }
 "lambda"            { return LAMBDA; }
-{alpha}	{ yylval.val = strdup(yytext); return SYM;}
+{alpha}	{ yylval.val = strdup(yytext); return SYM; }
 
 .	{  fprintf(stderr, "Entrada ignorada\n-->%s\n", yytext); }
 
