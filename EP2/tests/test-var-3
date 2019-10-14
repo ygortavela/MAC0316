@@ -1,2 +1,2 @@
-let x = (lambda x : x + x);
-return x(2);
+let half = (lambda z : z / 2);
+return half(12);

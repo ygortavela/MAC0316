@@ -58,3 +58,9 @@ x = x + 10;
 return x;
 ```
 *A expressão esperada para o bloco acima é `(def x 10 (def x (+ x 10) x))`, e o valor igual a 20.*
+
+## **Observação**
+As funções que foram implementadas no EP1 se encontram nos respectivos arquivos de teste:
+1. **factorial**: *test-func-1*
+2. **cube**: *test-var-2*
+3. **half**: *test-var-3*

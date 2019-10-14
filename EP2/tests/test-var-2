@@ -1,2 +1,2 @@
-let um = 42;
-return (12 + um);
+let cube = (lambda z : z * z * z);
+return cube(3);

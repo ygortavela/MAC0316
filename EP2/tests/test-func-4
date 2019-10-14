@@ -1,9 +1,0 @@
-fn fact(n) {
-    if (n)
-    then
-        n * fact(n - 1)
-    else
-        1
-}
-
-return fact(4);

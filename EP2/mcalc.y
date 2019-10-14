@@ -38,21 +38,21 @@ char *funcall(char *name, char *arg) {
 }
 
 char *def(char *name, char *arg ,char *expr) {
-    char *res = malloc(strlen(name) + strlen(arg) + strlen(expr)   + 16);
+    char *res = malloc(strlen(name) + strlen(arg) + strlen(expr) + 16);
     sprintf(res, "(def %s %s %s)", name, arg , expr);
 
     return res;
 }
 
 char *fundef(char *arg, char *body) {
-    char *res = malloc(strlen(arg) + strlen(body)+ 8);
+    char *res = malloc(strlen(arg) + strlen(body) + 16);
     sprintf(res, "(func %s %s)", arg, body);
 
     return res;
 }
 
 char *set(char *var, char *value) {
-    char *res = malloc(strlen(var) + strlen(value)+ 8);
+    char *res = malloc(strlen(var) + strlen(value) + 16);
     sprintf(res, "(:= %s %s)", var, value);
 
     return res;
@@ -103,7 +103,7 @@ exp: 	        END exp SCOLON {$$ = dup($2);}
         | 		OPEN exp CLOSE	{ $$ = dup($2); }
         | 		IF exp THEN exp ELSE exp { $$ = newflow($2, $4, $6); }
         | 		call OPEN exp CLOSE	{ $$ = funcall($1, $3); }
-        |       FUNC SYM OPEN SYM CLOSE OPENC exp CLOSEC exp  { $$ =   def($2, "0", sequence(set($2, fundef($4, $7)), $9));}
+        |       FUNC SYM OPEN SYM CLOSE OPENC exp CLOSEC exp  { $$ = def($2, "0", sequence(set($2, fundef($4, $7)), $9));}
 ;
 
 call:           SYM         { $$ = dup($1); }

@@ -31,9 +31,6 @@ alpha	[A-Za-z]+
 "if"    { return IF; }
 "then"  { return THEN; }
 "else"  { return ELSE; }
-"half"	{ yylval.val = "half"; return FUNC; }
-"cube"	{ yylval.val = "cube"; return FUNC; }
-"factorial"	{ yylval.val = "factorial"; return FUNC; }
 "let"				{ return LET; }
 "fn"				{ return FUNC; }
 "return"            { return END; }
