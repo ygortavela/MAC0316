@@ -1,6 +1,10 @@
+let x = 9;
 fn teste(y) {
     y = y + 1;
     return y;
 }
 
-return teste(3);
+let y = 90;
+y = y + 10;
+
+return teste(x + y);

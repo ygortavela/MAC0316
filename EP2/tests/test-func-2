@@ -1,4 +1,6 @@
-let x = 1;
-x = x + 10;
-let y = (lambda y : y + y);
-return y;
+fn teste(y) {
+    y = y + 1;
+    return y;
+}
+
+return teste(3);

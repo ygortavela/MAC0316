@@ -195,17 +195,4 @@
 ; Facilitador
 (define (interpS [s : s-expression]) (interp (desugar (parse s)) mt-env mt-store))
 
-; Testes
-(test (v*s-v (interp (plusC (numC 10) (appC (lamC '_ (numC 5)) (numC 10)))
-              mt-env mt-store))
-      (numV 15))
-
-(interpS '(+ 10 (call (func x (+ x x)) 16)))
-
-(interpS '(call (func x (seq (:= x (+ x 10)) x))  32))
-
-(interpS '(def um 42 (+ 12 um)))
-
-(interpS '(def fat 1729 (seq (:= fat (func n (if n (* n (call fat (- n 1))) 1))) (call fat 10))))
-
 (interpS (read))
